@@ -1,0 +1,11 @@
+# Project place file
+/Slap Tower Game.rbxlx
+
+sourcemap.json
+Packages
+ServerPackages
+wally.lock
+
+# Roblox Studio lock files
+/*.rbxlx.lock
+/*.rbxl.lock
