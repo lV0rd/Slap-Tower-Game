@@ -69,9 +69,6 @@ function module:init()
 		end
 
 		self.Debounce = true
-		task.delay(self.DebounceTime, function()
-			self.Debounce = false
-		end)
 
         Button.Color = Color3.fromRGB(150, 18, 18)
 
@@ -82,7 +79,7 @@ function module:init()
 			end
 		end
 
-		task.wait(2)
+		task.wait(2 + self.DebounceTime)
 
 		for i, v in AffectedParts:GetChildren() do
 			if v:IsA("BasePart") then
@@ -91,7 +88,9 @@ function module:init()
 			end
 		end
 
-        Button.Color = Color3.fromRGB(23, 170, 23)
+		Button.Color = Color3.fromRGB(23, 170, 23)
+
+		self.Debounce = false
 	end))
 end
 

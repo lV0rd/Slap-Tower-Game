@@ -16,8 +16,7 @@ function module.new(instance: BasePart)
 		Janitor = Janitor.new(),
 		Debounce = false :: boolean,
 
-        Damage = instance:GetAttribute("Damage") or 10,
-        WaitTime = instance:GetAttribute("WaitTime") or 1,
+        WaitTime = instance:GetAttribute("WaitTime") or 3,
 	}, module)
 
 	self:init()
@@ -56,11 +55,7 @@ function module:init()
 
         task.wait(self.WaitTime)
 
-        for i = 100, 1, -1 do
-            task.wait(1 / 100)
-            self.Instance.Transparency = i / 100
-        end
-
+        self.Instance.Transparency = 0
         self.Instance.CanCollide = true
 
         self.Debounce = false

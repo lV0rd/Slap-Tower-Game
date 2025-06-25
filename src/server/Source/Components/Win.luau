@@ -26,7 +26,7 @@ function module.new(instance: BasePart)
 		Janitor = Janitor.new(),
 		Debounce = {} :: {[Player] : boolean},
 
-        DebounceTime = 10,
+        DebounceTime = 20,
 	}, module)
 
 	self:init()
@@ -68,6 +68,7 @@ function module:init()
         Replica:Set({"Wins"}, Replica.Data.Wins + 1)
         Player.leaderstats.Wins.Value = Replica.Data.Wins
 
+        Character:PivotTo(workspace.Map.Lobby.SpawnLocation.CFrame)
         WinEvent:Fire(Player)
     end))
 end
