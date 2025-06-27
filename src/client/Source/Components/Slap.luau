@@ -1,6 +1,6 @@
-local Debris = game:GetService("Debris")
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local RunService = game:GetService("RunService")
 
 local LocalPlayer = Players.LocalPlayer
 
@@ -23,19 +23,25 @@ local Components = {}
 
 local PLAYER_DETECTION_ONLY = false
 
-function module.new(instance: Tool)
+function weld(p1, p2)
+	local weldConstraint = Instance.new("WeldConstraint")
+	weldConstraint.Part0 = p1
+	weldConstraint.Part1 = p2
+	weldConstraint.Parent = p1
+end
 
-    local Data = SlapData[instance.Name]
-    if not Data then
-        warn("no slap data found for ", instance)
-        return
-    end
+function module.new(instance: Tool)
+	local Data = SlapData[instance.Name]
+	if not Data then
+		warn("no slap data found for ", instance)
+		return
+	end
 
 	local self = setmetatable({
 		Instance = instance :: Tool,
-        Data = Data,
+		Data = Data,
 		Janitor = Janitor.new(),
-        debounce = false :: boolean,
+		debounce = false :: boolean,
 		DebounceTime = Data.DebounceTime or 1,
 	}, module)
 
@@ -48,6 +54,9 @@ function module:init()
 	table.insert(Components, self)
 
 	self.Janitor:Add(self.Instance.Activated:Connect(function()
+		local Hitbox
+		local connection
+
 		if self.debounce then
 			return
 		end
@@ -74,17 +83,29 @@ function module:init()
 		end
 
 		local RootPart = Humanoid.RootPart
-		local Hitbox = Instance.new("Part")
-		Hitbox.Size = Vector3.new(5, 5, 6)
+		Hitbox = Instance.new("Part")
+		Hitbox.Size = Vector3.new(8, 5, 6)
 		Hitbox.Transparency = 0.5
 		Hitbox.CanCollide = false
-		Hitbox.Anchored = true
-		Hitbox.CFrame = CFrame.new(RootPart.Position + RootPart.CFrame.LookVector * (Hitbox.Size.Z / 2) * 2)
+		Hitbox.Anchored = false
+		Hitbox.Massless = true
+		Hitbox.CFrame = CFrame.new(RootPart.Position + RootPart.CFrame.LookVector * (Hitbox.Size.Z / 2) * 1.25)
 			* CFrame.Angles(0, RootPart.Orientation.Y * math.pi / 180, 0)
 		Hitbox.Parent = workspace
-		Debris:AddItem(Hitbox, 0.5)
+		weld(Hitbox, RootPart)
 
-		task.spawn(function()
+		task.delay(0.5, function()
+			if connection then
+				connection:Disconnect()
+				connection = nil
+			end
+
+			if Hitbox then
+				Hitbox:Destroy()
+			end
+		end)
+
+		connection = RunService.Heartbeat:Connect(function()
 			local parts = workspace:GetPartBoundsInBox(Hitbox.CFrame, Hitbox.Size, nil)
 
 			for _, part in ipairs(parts) do
@@ -96,13 +117,29 @@ function module:init()
 
 					if PLAYER_DETECTION_ONLY then
 						if hitPlayer then
+							if connection then
+								connection:Disconnect()
+								connection = nil
+							end
+
+							if Hitbox then
+								Hitbox:Destroy()
+							end
+
 							SlapEvent:Fire(hum)
-							Hitbox:Destroy()
 							break
 						end
 					else
-						SlapEvent:Fire(hum)
-						Hitbox:Destroy()
+						if connection then
+								connection:Disconnect()
+								connection = nil
+							end
+
+							if Hitbox then
+								Hitbox:Destroy()
+							end
+
+							SlapEvent:Fire(hum)
 						break
 					end
 				end

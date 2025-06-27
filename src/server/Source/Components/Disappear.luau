@@ -17,6 +17,7 @@ function module.new(instance: BasePart)
 		Debounce = false :: boolean,
 
         WaitTime = instance:GetAttribute("WaitTime") or 3,
+        Speed = instance:GetAttribute("Speed") or 0.1,
 	}, module)
 
 	self:init()
@@ -46,9 +47,9 @@ function module:init()
 
         self.Debounce = true
 
-        for i = 1, 100 do
-            task.wait(1 / 100)
-            self.Instance.Transparency = i / 100
+        for i = 1, 10 do
+            task.wait(self.Speed)
+            self.Instance.Transparency = i / 10
         end
 
         self.Instance.CanCollide = false

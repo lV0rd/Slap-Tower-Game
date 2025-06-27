@@ -1,13 +1,25 @@
 return {
     ["Slap"] = {
-        Force = 40,
+        Force = 550,
         Damage = 1,
-        DebounceTime = 4,
+        DebounceTime = 10,
     },
 
     ["OP Slap"] = {
-        Force = 70,
+        Force = 750,
         Damage = 6,
-        DebounceTime = 2,
+        DebounceTime = 7,
+    },
+
+    ["Winner Slap"] = {
+        Force = 650,
+        Damage = 10,
+        DebounceTime = 3,
+    },
+
+    ["Rainbow Slap"] = {
+        Force = 11650,
+        Damage = 60,
+        DebounceTime = 1,
     },
 }

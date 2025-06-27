@@ -78,13 +78,11 @@ function characterSpawn(Character)
 
 	for i, v in Gamepass do
 		if Replica.Data.Gamepasses[tostring(v.ID)] and v.OnSpawn then
-			v.Callback(Player, PlayerData)
+			task.spawn(v.Callback, Player, PlayerData)
 		end
 	end
-	
-	Humanoid.Died:Once(function()
-		
-	end)
+
+	Humanoid.Died:Once(function() end)
 end
 
 function Service:GetAllPlayers(): { [Player]: PlayerData }
@@ -146,7 +144,7 @@ function Service:PlayerJoin(Player: Player)
 			},
 			Data = Profile.Data,
 		}),
-        --[[
+		--[[
         Private session player data
 		LocalData = ReplicaServer.New({
 			Token = LocalDataReplicaToken,
@@ -173,36 +171,33 @@ function Service:PlayerJoin(Player: Player)
 
 	self.Players[Player] = Data
 
-    
-	task.spawn(function()
-		local Replica = Data.Replica
-		local ReplicaData = Replica.Data
-		local Gamepasses = ReplicaData.Gamepasses
-		for name, gamepass in Gamepass do
-			local Success, Owns = Future.Try(function()
-				return MarketplaceService:UserOwnsGamePassAsync(Player.UserId, tonumber(gamepass.ID))
-			end):Await()
+	local Replica = Data.Replica
+	local ReplicaData = Replica.Data
+	local Gamepasses = ReplicaData.Gamepasses
+	
+	for name, gamepass in Gamepass do
+		local Success, Owns = Future.Try(function()
+			return MarketplaceService:UserOwnsGamePassAsync(Player.UserId, tonumber(gamepass.ID))
+		end):Await()
 
-			if not Success then
-				Owns = false
-			end
-
-			local CurrentState = Gamepasses[tostring(gamepass.ID)]
-
-			if Owns then
-				if not CurrentState then
-					Replica:Set({ "Gamepasses", tostring(gamepass.ID) }, true)
-				end
-
-				if gamepass.OnJoin then
-					gamepass.Callback(Player, Data)
-				end
-			elseif CurrentState == nil then
-				Replica:Set({ "Gamepasses", tostring(gamepass.ID) }, false)
-			end
+		if not Success then
+			Owns = false
 		end
-	end)
-    
+
+		local CurrentState = Gamepasses[tostring(gamepass.ID)]
+
+		if Owns then
+			if not CurrentState then
+				Replica:Set({ "Gamepasses", tostring(gamepass.ID) }, true)
+			end
+
+			if gamepass.OnJoin then
+				gamepass.Callback(Player, Data)
+			end
+		elseif CurrentState == nil then
+			Replica:Set({ "Gamepasses", tostring(gamepass.ID) }, false)
+		end
+	end
 
 	local leaderstats = Instance.new("Folder")
 	leaderstats.Name = "leaderstats"
@@ -233,7 +228,7 @@ for i, Player in Players:GetPlayers() do
 end
 
 Players.PlayerAdded:Connect(function(Player)
-    --[[
+	--[[
     Welcome badge
 	task.spawn(function()
 		local _, OwnWelcomeBadge = Future.Try(function()
@@ -306,7 +301,7 @@ PlaytimeClock:Start()
 --ROBLOX PLS ADD AN EVENT FOR THIS THIS IS SO DOOKY
 local lastElapse = 0
 RunService.PostSimulation:Connect(function()
-	if workspace:GetServerTimeNow() - lastElapse < 4 then
+	if workspace:GetServerTimeNow() - lastElapse < 5 then
 		return
 	end
 
@@ -314,25 +309,31 @@ RunService.PostSimulation:Connect(function()
 
 	for i, v in Service.Players do
 		local Replica = v.Replica
-		if not Replica.Data.InGroup then
 
-			local Success, GroupInfo = Future.Try(function()
-				return GroupService:GetGroupsAsync(i.UserId)
-			end):Await()
+		local Success, GroupInfo = Future.Try(function()
+			return GroupService:GetGroupsAsync(i.UserId)
+		end):Await()
 
-			if not Success then
-				continue
-			end
+		if not Success then
+			continue
+		end
 
-			if GroupInfo then
-				for _, group in GroupInfo do
-					if group.Id == GROUP_ID then
-						Replica:Set({"InGroup" }, true)
+		local found
+
+		if GroupInfo then
+			for _, group in GroupInfo do
+				if group.Id == GROUP_ID then
+					found = true
+					if not Replica.Data.InGroup then
+						Replica:Set({ "InGroup" }, true)
 						Service.GroupJoined:Fire(i)
-						break
 					end
 				end
 			end
+		end
+
+		if not found and Replica.Data.InGroup then
+			Replica:Set({ "InGroup" }, false)
 		end
 	end
 end)

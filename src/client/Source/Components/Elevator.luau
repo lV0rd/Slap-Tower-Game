@@ -37,6 +37,9 @@ function module:init()
 		end
 
 		local Player = Players:GetPlayerFromCharacter(Character)
+		if not Player then
+			return
+		end
 
 		if Player.UserId ~= LocalPlayer.UserId then
 			return

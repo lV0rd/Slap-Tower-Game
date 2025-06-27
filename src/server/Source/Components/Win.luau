@@ -20,6 +20,14 @@ local Components = {}
 
 local PlayerService = require(Services.PlayerService)
 
+
+--incase u want something to happen whenever a player beats a certain tower or smth idk lol
+local functions = {
+    ["Default"] = function (Player : Player, PlayerData : PlayerService.PlayerData)
+        print(Player.Name, "Won!")
+    end
+}
+
 function module.new(instance: BasePart)
 	local self = setmetatable({
 		Instance = instance :: BasePart,
@@ -36,6 +44,8 @@ end
 
 function module:init()
 	table.insert(Components, self)
+
+    local winPartName = "Default" --self.Instance.Name
 	
     self.Janitor:Add(self.Instance.Touched:Connect(function(hit: BasePart)
         local Character = hit.Parent
@@ -67,6 +77,8 @@ function module:init()
         local Replica = PlayerData.Replica
         Replica:Set({"Wins"}, Replica.Data.Wins + 1)
         Player.leaderstats.Wins.Value = Replica.Data.Wins
+
+        functions[winPartName](Player, PlayerData)
 
         Character:PivotTo(workspace.Map.Lobby.SpawnLocation.CFrame)
         WinEvent:Fire(Player)
