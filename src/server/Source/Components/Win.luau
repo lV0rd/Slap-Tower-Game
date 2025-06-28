@@ -20,21 +20,40 @@ local Components = {}
 
 local PlayerService = require(Services.PlayerService)
 
+local Tools = ReplicatedStorage.Assets.Tools
 
 --incase u want something to happen whenever a player beats a certain tower or smth idk lol
+--put _ instead of spaces in the name, cuz roblox dumb and doesnt allow spaces in attribute names
+--eg: Something_Slap => "Something Slap"
 local functions = {
-    ["Default"] = function (Player : Player, PlayerData : PlayerService.PlayerData)
-        print(Player.Name, "Won!")
-    end
+	["Default"] = function(Player: Player, PlayerData: PlayerService.PlayerData)
+		print(Player.Name, "Won!")
+		local Character = Player.Character
+		Player:SetAttribute("Winner_Slap", true)
+
+		local FoundSlap = Character:FindFirstChild("Winner Slap") or Player.Backpack:FindFirstChild("Winner Slap")
+		if FoundSlap then
+			return
+		end
+
+		local Slap = Tools:FindFirstChild("Winner Slap")
+		if not Slap then
+			warn("Winner Slap", "not found in Tools")
+			return
+		end
+
+		local SlapClone = Slap:Clone()
+		SlapClone.Parent = Player.Backpack
+	end,
 }
 
 function module.new(instance: BasePart)
 	local self = setmetatable({
 		Instance = instance :: BasePart,
 		Janitor = Janitor.new(),
-		Debounce = {} :: {[Player] : boolean},
+		Debounce = {} :: { [Player]: boolean },
 
-        DebounceTime = 20,
+		DebounceTime = 20,
 	}, module)
 
 	self:init()
@@ -45,44 +64,44 @@ end
 function module:init()
 	table.insert(Components, self)
 
-    local winPartName = "Default" --self.Instance.Name
-	
-    self.Janitor:Add(self.Instance.Touched:Connect(function(hit: BasePart)
-        local Character = hit.Parent
-        local Humanoid = Character:FindFirstChild("Humanoid")
+	local winPartName = "Default" --self.Instance.Name
 
-        if not Humanoid then
-            return
-        end
+	self.Janitor:Add(self.Instance.Touched:Connect(function(hit: BasePart)
+		local Character = hit.Parent
+		local Humanoid = Character:FindFirstChild("Humanoid")
 
-        local Player = Players:GetPlayerFromCharacter(Character)
-        if not Player then
-            return
-        end
+		if not Humanoid then
+			return
+		end
 
-        if self.Debounce[Player] then
-            return
-        end
+		local Player = Players:GetPlayerFromCharacter(Character)
+		if not Player then
+			return
+		end
 
-        self.Debounce[Player] = true
-        task.delay(self.DebounceTime, function()
-            self.Debounce[Player] = false
-        end)
+		if self.Debounce[Player] then
+			return
+		end
 
-        local PlayerData = PlayerService:GetPlayer(Player)
-        if not PlayerData then
-            return
-        end
+		self.Debounce[Player] = true
+		task.delay(self.DebounceTime, function()
+			self.Debounce[Player] = false
+		end)
 
-        local Replica = PlayerData.Replica
-        Replica:Set({"Wins"}, Replica.Data.Wins + 1)
-        Player.leaderstats.Wins.Value = Replica.Data.Wins
+		local PlayerData = PlayerService:GetPlayer(Player)
+		if not PlayerData then
+			return
+		end
 
-        functions[winPartName](Player, PlayerData)
+		local Replica = PlayerData.Replica
+		Replica:Set({ "Wins" }, Replica.Data.Wins + 1)
+		Player.leaderstats.Wins.Value = Replica.Data.Wins
 
-        Character:PivotTo(workspace.Map.Lobby.SpawnLocation.CFrame)
-        WinEvent:Fire(Player)
-    end))
+		functions[winPartName](Player, PlayerData)
+
+		Character:PivotTo(workspace.Map.Lobby.SpawnLocation.CFrame)
+		WinEvent:Fire(Player)
+	end))
 end
 
 function module:_cleanup()

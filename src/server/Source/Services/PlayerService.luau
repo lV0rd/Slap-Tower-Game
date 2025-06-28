@@ -51,6 +51,8 @@ local PlayerDataReplicaToken = ReplicaServer.Token("PlayerData")
 
 --local SpinDebounce = {} --Debonce for the timed spin reward
 
+local Tools = ReplicatedStorage.Assets.Tools
+
 local GROUP_ID = Constants.GROUP_ID
 
 local Service = {
@@ -79,6 +81,26 @@ function characterSpawn(Character)
 	for i, v in Gamepass do
 		if Replica.Data.Gamepasses[tostring(v.ID)] and v.OnSpawn then
 			task.spawn(v.Callback, Player, PlayerData)
+		end
+	end
+
+	--Winner slaps thing (game session only, not saved!!!)
+	for i, v in Player:GetAttributes() do
+		if string.match(i, "Slap") and v then
+			local name = string.gsub(i, "_", " ")
+			local FoundSlap = Character:FindFirstChild(name) or Player.Backpack:FindFirstChild(name)
+			if FoundSlap then
+				continue
+			end
+
+			local Slap = Tools:FindFirstChild(name)
+			if not Slap then
+				warn(name, "not found in Tools")
+				continue
+			end
+
+			local SlapClone = Slap:Clone()
+			SlapClone.Parent = Player.Backpack
 		end
 	end
 
@@ -174,7 +196,7 @@ function Service:PlayerJoin(Player: Player)
 	local Replica = Data.Replica
 	local ReplicaData = Replica.Data
 	local Gamepasses = ReplicaData.Gamepasses
-	
+
 	for name, gamepass in Gamepass do
 		local Success, Owns = Future.Try(function()
 			return MarketplaceService:UserOwnsGamePassAsync(Player.UserId, tonumber(gamepass.ID))
