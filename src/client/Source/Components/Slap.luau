@@ -53,6 +53,11 @@ end
 function module:init()
 	table.insert(Components, self)
 
+	--Check ownership
+	if self.Instance.Parent ~= LocalPlayer.Backpack and self.Instance.Parent ~= LocalPlayer.Character then
+		return
+	end
+
 	self.Janitor:Add(self.Instance.Activated:Connect(function()
 		local Hitbox
 		local connection
