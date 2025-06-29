@@ -30,9 +30,15 @@ function module:init()
 		warn("Beam not found in instance", self.Instance)
 		return
 	end
-	
+
 	Beam.TextureSpeed = Speed / Beam.TextureLength
 	self.Instance.Velocity = self.Instance.CFrame.LookVector * Speed
+
+	self.Instance:GetAttributeChangedSignal("Speed"):Connect(function()
+		local newSpeed = self.Instance:GetAttribute("Speed")
+		Beam.TextureSpeed = newSpeed / Beam.TextureLength
+		self.Instance.Velocity = self.Instance.CFrame.LookVector * newSpeed
+	end)
 end
 
 function module:_cleanup()

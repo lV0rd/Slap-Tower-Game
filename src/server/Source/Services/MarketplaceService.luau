@@ -109,7 +109,7 @@ function Service.Start()
 			end
 
             local ProductData = match(Products, function(v)
-                return v.ID == ReceiptInfo.productId
+                return v.ID == ReceiptInfo.ProductId
             end)
 
 			if not ProductData then
@@ -117,7 +117,7 @@ function Service.Start()
 			end
 
 			return PurchaseIdCheckAsync(profile.Profile, ReceiptInfo.PurchaseId, function()
-				ProductData.Callback(ReceiptInfo, profile)
+				ProductData.Callback(player, profile)
 			end)
 		end
 
