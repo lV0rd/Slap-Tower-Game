@@ -34,6 +34,7 @@ local ReplicaServer = require(Modules.ReplicaServer)
 local Template = require(Data.ProfileTemplate)
 local Constants = require(Data.Constants)
 local Gamepass = require(Data.Gamepass)
+local Products = require(Data.Products)
 --local GamepassData = require(Data.Gamepass)
 
 local PlayerStore
@@ -54,6 +55,7 @@ local PlayerDataReplicaToken = ReplicaServer.Token("PlayerData")
 local Tools = ReplicatedStorage.Assets.Tools
 
 local GROUP_ID = Constants.GROUP_ID
+local EXPLODE_ID = Products.Explode.ID
 
 local Service = {
 	Name = script.Name,
@@ -103,6 +105,34 @@ function characterSpawn(Character)
 			SlapClone.Parent = Player.Backpack
 		end
 	end
+
+	--Premium stuff
+	if Replica.Data.HasPremium then
+		local PremiumSlap = Tools:FindFirstChild("Premium Slap")
+		if not PremiumSlap then
+			error("Premium Slap not found in Tools")
+		end
+
+		local PremiumSlapClone = PremiumSlap:Clone()
+		PremiumSlapClone.Parent = Player.Backpack
+	end
+
+	--Explode proximity prompt
+	local foundPrompt = Character.HumanoidRootPart:FindFirstChild("ExplodePrompt") --this should never happen.
+	if foundPrompt then
+		foundPrompt:Destroy()
+	end
+
+	local ExplodePrompt = Instance.new("ProximityPrompt")
+	ExplodePrompt.ActionText = "🎇Explode?"
+	ExplodePrompt.Name = "ExplodePrompt"
+	ExplodePrompt.Exclusivity = Enum.ProximityPromptExclusivity.OneGlobally
+	ExplodePrompt.Triggered:Connect(function(Triggerer)
+		Triggerer:SetAttribute("TargetPlayer", Player.Name)
+		MarketplaceService:PromptProductPurchase(Triggerer, EXPLODE_ID)
+	end)
+
+	ExplodePrompt.Parent = Character.HumanoidRootPart
 
 	Humanoid.Died:Once(function() end)
 end
@@ -219,6 +249,10 @@ function Service:PlayerJoin(Player: Player)
 		elseif CurrentState == nil then
 			Replica:Set({ "Gamepasses", tostring(gamepass.ID) }, false)
 		end
+	end
+
+	if Player.MembershipType == Enum.MembershipType.Premium and not Replica.Data.HasPremium then
+		Replica:Set({ "HasPremium" }, true)
 	end
 
 	local leaderstats = Instance.new("Folder")

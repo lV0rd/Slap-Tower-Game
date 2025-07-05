@@ -57,7 +57,7 @@ function module:init()
 		BodyVelocity.MaxForce = Vector3.new(0, math.huge, 0)
 		BodyVelocity.Velocity = Vector3.new(0, Force, 0)
 		BodyVelocity.Parent = Humanoid.RootPart
-		Debris:AddItem(BodyVelocity, 0.15)
+		Debris:AddItem(BodyVelocity, 0.05)
 	end))
 end
 

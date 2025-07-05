@@ -90,7 +90,7 @@ function module:init()
 		local RootPart = Humanoid.RootPart
 		Hitbox = Instance.new("Part")
 		Hitbox.Size = Vector3.new(8, 5, 6)
-		Hitbox.Transparency = 0.5
+		Hitbox.Transparency = 1
 		Hitbox.CanCollide = false
 		Hitbox.Anchored = false
 		Hitbox.Massless = true
@@ -117,7 +117,7 @@ function module:init()
 				local char = part:FindFirstAncestorOfClass("Model")
 				local hum = char and char:FindFirstChildOfClass("Humanoid")
 
-				if hum and char ~= Character then
+				if hum and char ~= Character and not char:GetAttribute("Immunity") then
 					local hitPlayer = Players:GetPlayerFromCharacter(char)
 
 					if PLAYER_DETECTION_ONLY then

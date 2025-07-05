@@ -17,7 +17,7 @@ function module.new(instance: Model)
 		Janitor = Janitor.new(),
 		Debounce = false :: boolean,
 
-		DebounceTime = DebounceTime > 10 and DebounceTime or 10,
+		DebounceTime = DebounceTime > 1.5 and DebounceTime or 1.5,
 	}, module)
 
 	self:init()
@@ -28,7 +28,7 @@ end
 function module:init()
 	table.insert(Components, self)
 
-	local Button = self.Instance:FindFirstChild("Button")
+	local Button = self.Instance:FindFirstChild("Button") :: BasePart?
 	if not Button then
 		warn("Button not found in instance", self.Instance)
 		return
@@ -42,14 +42,14 @@ function module:init()
 
 	local Reverse = Button:GetAttribute("Reverse") or false
 
+	local OldColor = Button.Color
+
 	for i, v in AffectedParts:GetChildren() do
 		if v:IsA("BasePart") then
 			v.Transparency = if Reverse then 0.5 else 0
 			v.CanCollide = if Reverse then false else true
 		end
 	end
-
-    Button.Color = Color3.fromRGB(23, 170, 23)
 
 	self.Janitor:Add(Button.Touched:Connect(function(hit: BasePart)
 		local Character = hit.Parent
@@ -70,7 +70,8 @@ function module:init()
 
 		self.Debounce = true
 
-        Button.Color = Color3.fromRGB(150, 18, 18)
+		Button.Color = Color3.fromRGB(105, 16, 16)
+		Button.Position -= Vector3.yAxis * .25
 
 		for i, v in AffectedParts:GetChildren() do
 			if v:IsA("BasePart") then
@@ -79,7 +80,7 @@ function module:init()
 			end
 		end
 
-		task.wait(2 + self.DebounceTime)
+		task.wait(self.DebounceTime)
 
 		for i, v in AffectedParts:GetChildren() do
 			if v:IsA("BasePart") then
@@ -88,7 +89,8 @@ function module:init()
 			end
 		end
 
-		Button.Color = Color3.fromRGB(23, 170, 23)
+		Button.Color = OldColor
+		Button.Position += Vector3.yAxis * .25
 
 		self.Debounce = false
 	end))

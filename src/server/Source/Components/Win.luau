@@ -65,6 +65,7 @@ function module:init()
 	table.insert(Components, self)
 
 	local winPartName = "Default" --self.Instance.Name
+	local CoinsAmount = self.Instance:GetAttribute("Coins") or 1000
 
 	self.Janitor:Add(self.Instance.Touched:Connect(function(hit: BasePart)
 		local Character = hit.Parent
@@ -95,6 +96,7 @@ function module:init()
 
 		local Replica = PlayerData.Replica
 		Replica:Set({ "Wins" }, Replica.Data.Wins + 1)
+		Replica:Set({ "Coins" }, Replica.Data.Coins + CoinsAmount)
 		Player.leaderstats.Wins.Value = Replica.Data.Wins
 
 		functions[winPartName](Player, PlayerData)

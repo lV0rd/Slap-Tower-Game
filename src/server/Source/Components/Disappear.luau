@@ -47,9 +47,9 @@ function module:init()
 
         self.Debounce = true
 
-        for i = 1, 10 do
+        for i = 1, 20 do
             task.wait(self.Speed)
-            self.Instance.Transparency = i / 10
+            self.Instance.Transparency = i / 20
         end
 
         self.Instance.CanCollide = false

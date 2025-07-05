@@ -21,7 +21,7 @@ local GROUP_WALL_NAME = "Group"
 
 local Map = workspace:WaitForChild("Map")
 local Lobby = Map:WaitForChild("Lobby")
-local GroupWall = Lobby:WaitForChild(GROUP_WALL_NAME, 200)
+local GroupWall = Lobby:WaitForChild(GROUP_WALL_NAME, 5)
 
 function toggle(p, bool)
     if not p then

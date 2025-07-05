@@ -35,6 +35,7 @@ end
 
 local function PurchaseIdCheckAsync(profile, purchase_id, grant_product): Enum.ProductPurchaseDecision
 	profile = profile
+
 	if profile:IsActive() == true then
 		local purchase_id_cache = profile.Data.PurchaseIdCache
 		if purchase_id_cache == nil then
@@ -92,8 +93,9 @@ function Service.Start()
 
 	local function Handle(ReceiptInfo)
 		local player = Players:GetPlayerByUserId(ReceiptInfo.PlayerId)
-
+		
 		if player ~= nil then
+			print("player does exist")
 			local profile = PlayerService:GetPlayer(player)
 
 			while profile == nil and player.Parent == Players do
@@ -105,6 +107,7 @@ function Service.Start()
 			end
 
 			if not profile then
+				warn("no profile?")
 				return
 			end
 
@@ -113,6 +116,7 @@ function Service.Start()
             end)
 
 			if not ProductData then
+				warn(`Product with ID {ReceiptInfo.ProductId} not found in Products`)
 				return Enum.ProductPurchaseDecision.NotProcessedYet
 			end
 
@@ -127,15 +131,6 @@ function Service.Start()
 	local function GamepassHandle(Player: Player, GamepassId: number, Purchased: boolean)
 		if Purchased == true then
 			local PlayerData = PlayerService:GetPlayer(Player)
-
-			while PlayerData == nil and Player.Parent == Players do
-				PlayerData = PlayerService:GetPlayer(Player)
-				if PlayerData ~= nil then
-					break
-				end
-				task.wait()
-			end
-
 			if not PlayerData then
 				return
 			end
@@ -170,9 +165,29 @@ function Service.Start()
 			gamepassData.Callback(Player, PlayerData)
 		end
 	end
+		
+	local function PremiumHandle(Player)
+		if Player.MembershipType == Enum.MembershipType.Premium then
+			local PlayerData = PlayerService:GetPlayer(Player)
+			if not PlayerData then
+				return
+			end
+
+			PlayerData.Replica:Set({ "HasPremium" }, true)
+
+			local PremiumSlap = ReplicatedStorage.Tools:FindFirstChild("Premium Slap")
+			if not PremiumSlap then
+				error("Premium Slap not found in Tools")
+			end
+
+			local PremiumSlapClone = PremiumSlap:Clone()
+			PremiumSlapClone.Parent = Player.Backpack
+		end
+	end
 
 	MarketplaceService.ProcessReceipt = Handle
 	MarketplaceService.PromptGamePassPurchaseFinished:Connect(GamepassHandle)
+	Players.PlayerMembershipChanged:Connect(PremiumHandle)
 end
 
 return Service

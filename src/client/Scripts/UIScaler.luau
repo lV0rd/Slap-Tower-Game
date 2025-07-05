@@ -4,7 +4,7 @@ local RootGui = PlayerGui:WaitForChild("RootGui", 100)
 
 for i, v in RootGui:GetDescendants() do
 	if v:IsA("UIStroke") then
-		local BASE_SIZE = 1200
+		local BASE_SIZE = 1980
 		local uiStroke = v
 		local initialStrokeThickness = uiStroke.Thickness
 		local camera = game:GetService("Workspace").CurrentCamera

@@ -16,8 +16,8 @@ function module.new(instance: BasePart)
 		Janitor = Janitor.new(),
 		Debounce = {} :: {[Player] : boolean},
 
-        DebounceTime = instance:GetAttribute("DebounceTime") or 0.2,
-        Damage = instance:GetAttribute("Damage") or 10,
+        DebounceTime = instance:GetAttribute("DebounceTime") or 0.5,
+        Damage = instance:GetAttribute("Damage") or 3,
 	}, module)
 
 	self:init()

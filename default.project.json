@@ -2,7 +2,6 @@
   "name": "Slap Tower Game",
   "tree": {
     "$className": "DataModel",
-
     "ReplicatedStorage": {
       "Shared": {
         "$path": "src/shared"
@@ -13,37 +12,42 @@
       "Packages": {
         "$path": "Packages"
       },
-      
       "$ignoreUnknownInstances": true
     },
-
-    "ServerStorage":{
+    "ServerStorage": {
       "Source": {
         "$path": "src/server/Source"
       },
       "$ignoreUnknownInstances": true
     },
-
     "ServerScriptService": {
       "Server": {
         "$path": "src/server/Loader.server.luau"
       },
       "Scripts": {
-        "$path": "src/server/Scripts"
-      }
+        "$path": "src/server/Scripts",
+        "$ignoreUnknownInstances": true
+      },
+      "$ignoreUnknownInstances": true
     },
-
     "StarterPlayer": {
       "StarterPlayerScripts": {
         "Client": {
           "$path": "src/client/Loader.client.luau"
         },
         "Scripts": {
-          "$path": "src/client/Scripts"
-        }
+          "$path": "src/client/Scripts",
+          "$ignoreUnknownInstances": true
+        },
+        "$ignoreUnknownInstances": true
+      },
+      "StarterCharacterScripts": {
+        "Scripts": {
+          "$path": "src/client/CharacterScripts",
+          "$ignoreUnknownInstances": true
+        },
+        "$ignoreUnknownInstances": true
       }
     }
-
-    
   }
 }
