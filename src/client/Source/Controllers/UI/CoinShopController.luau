@@ -85,10 +85,14 @@ function Controller.Start()
 			Preview.Description.Text = "No description available."
 		end
 
+		local name = string.gsub(peek(SelectedItem), " ", "_")
+		local hasAttribute = LocalPlayer:GetAttribute(name)
+
 		if table.find(SlapsOwned, peek(SelectedItem)) then
-			Preview.Buy.TextLabel.Text = "Equip"
+			Preview.Buy.TextLabel.Text = hasAttribute and "Equipped" or "Equip"
 			Preview.Buy.BackgroundColor3 = Color3.fromRGB(217, 255, 0)
-			Preview.Buy.UIStroke.Color = Color3.fromRGB(190, 190, 0)			
+			Preview.Buy.UIStroke.Color = Color3.fromRGB(190, 190, 0)
+			Preview.Buy.Active = if hasAttribute then false else true
 		else
 			Preview.Buy.TextLabel.Text = "Buy for " .. tostring(ItemData.Price or 0) .. " coins"
 			Preview.Buy.BackgroundColor3 = Color3.fromRGB(0, 255, 0)
@@ -176,6 +180,8 @@ function Controller.Start()
 				else
 					print("fail")
 				end
+
+				updatePreview()
 			else
 				--BUY
 				local SelectedData = Slaps[peek(SelectedItem)]
@@ -210,6 +216,7 @@ function Controller.Start()
 		end
 
 		v.ItemName.Text = v.Name
+		v.Price.Text = tostring(ItemData.Price or 0).."$"
 
 		scope:Hydrate(v)({
 			[OnEvent("MouseButton1Click")] = function()

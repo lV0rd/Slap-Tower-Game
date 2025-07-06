@@ -122,11 +122,12 @@ function characterSpawn(Character)
 	if foundPrompt then
 		foundPrompt:Destroy()
 	end
-
+	
 	local ExplodePrompt = Instance.new("ProximityPrompt")
 	ExplodePrompt.ActionText = "🎇Explode?"
 	ExplodePrompt.Name = "ExplodePrompt"
 	ExplodePrompt.Exclusivity = Enum.ProximityPromptExclusivity.OneGlobally
+	ExplodePrompt.KeyboardKeyCode = Enum.KeyCode.F
 	ExplodePrompt.Triggered:Connect(function(Triggerer)
 		Triggerer:SetAttribute("TargetPlayer", Player.Name)
 		MarketplaceService:PromptProductPurchase(Triggerer, EXPLODE_ID)

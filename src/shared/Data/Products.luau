@@ -1,3 +1,7 @@
+local function randomForce(min, max)
+	return math.random(min, max) * (math.random(1, 2) == 1 and -1 or 1)
+end
+
 return {
 	["SkipTroll"] = {
 		ID = 3320291590,
@@ -101,6 +105,8 @@ return {
 
 			Humanoid.Health = 0
 
+			Player:SetAttribute("TargetPlayer", nil)
+
 			return true
 		end,
 	},
@@ -132,11 +138,29 @@ return {
 				return
 			end
 
-			local Explosion = Instance.new("Explosion")
-			Explosion.Position = HumanoidRootPart.Position
-			Explosion.BlastRadius = 0.1
-			Explosion.BlastPressure = 100
-			Explosion.Parent = workspace
+			for _, v in ipairs(HumanoidRootPart:GetChildren()) do
+				if v:IsA("LinearVelocity") and v.Name == "FlingForce" then
+					v:Destroy()
+				end
+			end
+
+			local flingForce = Instance.new("LinearVelocity")
+			flingForce.Name = "FlingForce"
+			flingForce.Attachment0 = HumanoidRootPart.RootAttachment
+			flingForce.MaxForce = math.huge
+			flingForce.RelativeTo = Enum.ActuatorRelativeTo.World
+			flingForce.VelocityConstraintMode = Enum.VelocityConstraintMode.Vector
+
+			local randomVelocity = Vector3.new(randomForce(300, 1000), math.random(500, 1200), randomForce(300, 1000))
+
+			flingForce.VectorVelocity = randomVelocity
+			flingForce.Parent = HumanoidRootPart
+
+			task.delay(0.2, function()
+				if flingForce and flingForce.Parent then
+					flingForce:Destroy()
+				end
+			end)
 
 			Player:SetAttribute("TargetPlayer", nil)
 
