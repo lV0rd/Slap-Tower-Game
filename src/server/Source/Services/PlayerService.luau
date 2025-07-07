@@ -86,7 +86,7 @@ function characterSpawn(Character)
 		end
 	end
 
-	--Winner slaps thing (game session only, not saved!!!)
+	--Tool attributes (slaps only rn)
 	for i, v in Player:GetAttributes() do
 		if string.match(i, "Slap") and v then
 			local name = string.gsub(i, "_", " ")
@@ -126,8 +126,11 @@ function characterSpawn(Character)
 	local ExplodePrompt = Instance.new("ProximityPrompt")
 	ExplodePrompt.ActionText = "🎇Explode?"
 	ExplodePrompt.Name = "ExplodePrompt"
-	ExplodePrompt.Exclusivity = Enum.ProximityPromptExclusivity.OneGlobally
+	ExplodePrompt.HoldDuration = 0.2
 	ExplodePrompt.KeyboardKeyCode = Enum.KeyCode.F
+	ExplodePrompt.RequiresLineOfSight = false
+	ExplodePrompt.ObjectText = "Troll this person ! 😈"
+
 	ExplodePrompt.Triggered:Connect(function(Triggerer)
 		Triggerer:SetAttribute("TargetPlayer", Player.Name)
 		MarketplaceService:PromptProductPurchase(Triggerer, EXPLODE_ID)
@@ -135,7 +138,9 @@ function characterSpawn(Character)
 
 	ExplodePrompt.Parent = Character.HumanoidRootPart
 
-	Humanoid.Died:Once(function() end)
+	Humanoid.Died:Once(function()
+		Player:SetAttribute("TargetPlayer", nil)
+	end)
 end
 
 function Service:GetAllPlayers(): { [Player]: PlayerData }

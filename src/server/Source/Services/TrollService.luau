@@ -1,3 +1,4 @@
+local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Service = {
 	Name = script.Name,
@@ -18,6 +19,18 @@ function Service.Start()
 		end
 
 		if TargetPlayer == Player.Name then
+			return
+		end
+
+		local Target = Players:FindFirstChild(TargetPlayer)
+		local TargetCharacter = Target and Target.Character
+		if not Target or not TargetCharacter then
+			warn(Player, "target player not found")
+			return
+		end
+
+		if TargetCharacter.Humanoid.Health <= 0 then
+			warn(Player, "target player is dead")
 			return
 		end
 

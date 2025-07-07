@@ -15,7 +15,7 @@ local GroupWall = Lobby:WaitForChild("Timed", 5)
 
 local Format = require(Shared.Utils.Format)
 
-local TIME_TO_WAIT = 60 * 1
+local TIME_TO_WAIT = 60 * 15
 
 function Controller.Start()
 	local JoinTime = LocalPlayer:GetAttribute("JoinTime") :: number
@@ -42,7 +42,10 @@ function Controller.Start()
 
 	connection = RunService.PreSimulation:Connect(function()
 		local TimeLeft = JoinTime + TIME_TO_WAIT - workspace:GetServerTimeNow()
-		if GroupWall then GroupWall.SurfaceGui.Timer.Text = "UNLOCK IN: "..Format.time(TimeLeft) end
+		if GroupWall then
+			GroupWall.SurfaceGui.Timer.Text = "UNLOCK IN: "..Format.time(TimeLeft)
+			GroupWall.SurfaceGui.Bar.Progress.Size = UDim2.fromScale((TIME_TO_WAIT - TimeLeft)/TIME_TO_WAIT, 1)
+		end
 
 		if TimeLeft <= 0 then
 			if connection then

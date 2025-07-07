@@ -17,7 +17,7 @@ function module.new(instance: Model)
 		Janitor = Janitor.new(),
 		Debounce = false :: boolean,
 
-		DebounceTime = DebounceTime > 1.5 and DebounceTime or 1.5,
+		DebounceTime = DebounceTime > 2.5 and DebounceTime or 2.5,
 	}, module)
 
 	self:init()

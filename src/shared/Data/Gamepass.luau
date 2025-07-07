@@ -77,4 +77,42 @@ return {
 			NewTool.Parent = Player.Backpack
 		end,
 	},
+
+	["Laser Gun"] = {
+		ID = 1299452491,
+		OnJoin = false,
+		OnSpawn = true,
+		Callback = function(Player: Player, PlayerData: any)
+			local Tool = Tools:FindFirstChild("Laser Gun") :: Tool?
+			if not Tool then
+				return
+			end
+
+			if Player.Backpack:FindFirstChild(Tool.Name) then
+				return
+			end
+
+			local NewTool = Tool:Clone()
+			NewTool.Parent = Player.Backpack
+		end,
+	},
+
+	["Grapple Hook"] = {
+		ID = 1299166934,
+		OnJoin = false,
+		OnSpawn = true,
+		Callback = function(Player: Player, PlayerData: any)
+			local Tool = Tools:FindFirstChild("Grapple Hook") :: Tool?
+			if not Tool then
+				return
+			end
+
+			if Player.Backpack:FindFirstChild(Tool.Name) then
+				return
+			end
+
+			local NewTool = Tool:Clone()
+			NewTool.Parent = Player.Backpack
+		end,
+	},
 }

@@ -1,4 +1,11 @@
+local Players = game:GetService("Players")
+
 local Character = script.Parent.Parent
+local LocalPlayer = Players.LocalPlayer
+if LocalPlayer.Character ~= Character then
+    return
+end
+
 local prox = Character.HumanoidRootPart:WaitForChild("ExplodePrompt", 10)
 if prox then
     prox:Destroy()

@@ -139,6 +139,7 @@ function Service.Start()
 		local Replica = PlayerData.Replica
 
 		if Debounces[Player] then
+			warn("Player is already debounced", Player.Name)
 			return
 		end
 
@@ -149,16 +150,18 @@ function Service.Start()
 		end)
 
 		if Replica.Data.Coins < (SelectedData.Price or 0) then
+			print("Not enough coins to buy item:", SelectedItem, "Player Coins:", Replica.Data.Coins)
 			return
 		end
 
 		if Replica.Data.SlapsOwned[SelectedItem] then
+			warn("Player already owns this item:", SelectedItem)
 			return
 		end
 
 		Replica:Set({ "Coins" }, Replica.Data.Coins - (SelectedData.Price or 0))
 		Replica:Set({ "SlapsOwned", SelectedItem }, true)
-
+		print("Finalized purchase for", Player.Name, "Item:", SelectedItem)
 		return true
 	end)
 
@@ -203,7 +206,7 @@ function Service.Start()
 		local NewTool = Tools:FindFirstChild(SelectedItem):Clone()
 		NewTool.Parent = Player.Backpack
 
-		return true
+		return true, name
 	end)
 end
 

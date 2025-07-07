@@ -1,4 +1,8 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local ServerStorage = game:GetService("ServerStorage")
+
+local Source = ServerStorage.Source
+local Services = Source.Services
 
 local Packages = ReplicatedStorage.Packages
 
@@ -8,6 +12,8 @@ local module = { Tag = script.Name }
 module.__index = module
 
 local Components = {}
+
+local PlayerService = require(Services.PlayerService)
 
 function module.new(instance: Model)
 	local self = setmetatable({
@@ -43,6 +49,8 @@ function module:init()
 		return
 	end
 
+	local Coins = self.Instance:GetAttribute("Coins")
+
 	self.Janitor:Add(ProximityPrompt.Triggered:Connect(function(Player: Player)
 		local Character = Player.Character
 		if not Character then
@@ -60,6 +68,18 @@ function module:init()
 		end)
 
 		Character:PivotTo(Destination.CFrame * CFrame.new(0, 1.5, 0))
+		
+		if Coins then
+			local PlayerData = PlayerService:GetPlayer(Player)
+			if not PlayerData then
+				return
+			end
+
+			local Replica = PlayerData.Replica
+			local Data = Replica.Data
+
+			Replica:Set({"Coins"}, Data.Coins + Coins)
+		end
 	end))
 end
 

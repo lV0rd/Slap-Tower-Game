@@ -64,7 +64,7 @@ function Controller.Start()
 	Preview.Visible = false
 
 	for i, v in Data.SlapsOwned do
-		if Slaps[v] then
+		if Slaps[i] then
 			table.insert(SlapsOwned, i)
 		end
 	end
@@ -175,12 +175,6 @@ function Controller.Start()
 					return
 				end
 
-				if Result then
-					print("Equipped item: ", peek(SelectedItem))
-				else
-					print("fail")
-				end
-
 				updatePreview()
 			else
 				--BUY
@@ -197,8 +191,17 @@ function Controller.Start()
 
 				local Success, Result = BuyFunction:Call(peek(SelectedItem)):Await()
 				if not Success then
-					warn("Failed to buy item: ", Result)
+					warn("Failed to buy item: ", Result, debug.traceback())
 					return
+				end
+
+				if not Result then
+					warn("Failed to buy item: ", peek(SelectedItem), debug.traceback())
+					return
+				end
+
+				if Result then
+					print("Successfully bought item: ", peek(SelectedItem), debug.traceback())
 				end
 			end
 		end,
@@ -216,7 +219,8 @@ function Controller.Start()
 		end
 
 		v.ItemName.Text = v.Name
-		v.Price.Text = tostring(ItemData.Price or 0).."$"
+		v.Price.Text = tostring(ItemData.Price or 0) .. "$"
+		v.LayoutOrder = ItemData.Price or 0
 
 		scope:Hydrate(v)({
 			[OnEvent("MouseButton1Click")] = function()
@@ -226,7 +230,7 @@ function Controller.Start()
 					SelectedItem:set(v.Name)
 				end
 
-				print(SlapsOwned)
+				for i, v in SlapsOwned do print(i, v) end
 			end,
 		})
 	end

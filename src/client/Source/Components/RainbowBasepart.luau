@@ -41,7 +41,7 @@ RunService.Stepped:Connect(function(t, dt)
 	for i, component in Components do
 		local part = component.Instance
 		if part:IsA("BasePart") then
-			local hue = (t * 0.2 + i * 0.1) % 1
+			local hue = (t * 0.2) % 1
 
 			local color = Color3.fromHSV(hue, 1, 1)
 			part.Color = color

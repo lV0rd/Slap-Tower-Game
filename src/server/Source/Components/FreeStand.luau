@@ -35,6 +35,8 @@ function module:init()
 		return
 	end
 
+	local Permanent = self.Instance:GetAttribute("Permanent")
+
 	self.Janitor:Add(TouchPart.Touched:Connect(function(Hit : BasePart)
 		local Character = Hit.Parent
 		local Humanoid = Character:FindFirstChildOfClass("Humanoid")
@@ -61,6 +63,11 @@ function module:init()
 		task.delay(self.DebounceTime, function()
 			self.Debounce[Player] = nil
 		end)
+
+		if Permanent then
+			local name = string.gsub(self.Instance.Name, " ", "_")
+			Player:SetAttribute(name, true)
+		end
 
 		local NewTool = Tools:FindFirstChild(self.Instance.Name):Clone()
 		NewTool.Parent = Player.Backpack

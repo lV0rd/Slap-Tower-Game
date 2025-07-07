@@ -167,4 +167,79 @@ return {
 			return true
 		end,
 	},
+
+	["Kill All"] = {
+		ID = 3326617051,
+		Callback = function(Player, PlayerData)
+			for _, v in ipairs(game.Players:GetPlayers()) do
+				if v.Character then
+					local Humanoid = v.Character:FindFirstChildOfClass("Humanoid")
+					if Humanoid then
+						Humanoid.Health = 0
+					end
+				end
+			end
+
+			return true
+		end,
+	},
+
+	["Explode All"] = {
+		ID = 3326617050,
+		Callback = function(Player, PlayerData)
+			for _, v in ipairs(game.Players:GetPlayers()) do
+				if v.Character then
+					local HumanoidRootPart = v.Character:FindFirstChild("HumanoidRootPart")
+					if HumanoidRootPart then
+						local Explosion = Instance.new("Explosion")
+						Explosion.Position = HumanoidRootPart.Position
+						Explosion.BlastRadius = 0
+						Explosion.BlastPressure = 0
+						Explosion.Parent = workspace
+						v.Character.Humanoid.Health = 0
+					end
+				end
+			end
+
+			return true
+		end,
+	},
+
+	["Fling All"] = {
+		ID = 3326617052,
+		Callback = function(Player, PlayerData)
+			for _, v in ipairs(game.Players:GetPlayers()) do
+				if v.Character then
+					local HumanoidRootPart = v.Character:FindFirstChild("HumanoidRootPart")
+					if HumanoidRootPart then
+						for _, child in ipairs(HumanoidRootPart:GetChildren()) do
+							if child:IsA("LinearVelocity") and child.Name == "FlingForce" then
+								child:Destroy()
+							end
+						end
+
+						local flingForce = Instance.new("LinearVelocity")
+						flingForce.Name = "FlingForce"
+						flingForce.Attachment0 = HumanoidRootPart.RootAttachment
+						flingForce.MaxForce = math.huge
+						flingForce.RelativeTo = Enum.ActuatorRelativeTo.World
+						flingForce.VelocityConstraintMode = Enum.VelocityConstraintMode.Vector
+
+						local randomVelocity = Vector3.new(randomForce(300, 1000), math.random(500, 1200), randomForce(300, 1000))
+
+						flingForce.VectorVelocity = randomVelocity
+						flingForce.Parent = HumanoidRootPart
+
+						task.delay(0.2, function()
+							if flingForce and flingForce.Parent then
+								flingForce:Destroy()
+							end
+						end)
+					end
+				end
+			end
+
+			return true
+		end,
+	},
 }

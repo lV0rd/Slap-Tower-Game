@@ -4,6 +4,6 @@ local Guard = require(ReplicatedStorage.Packages.Guard)
 
 return Red.Function("Equip", function(SelectedItem)
     return Guard.String(SelectedItem)
-end, function(result)
-    return Guard.Boolean(result)
+end, function(result, name)
+    return Guard.Boolean(result), Guard.String(name)
 end)

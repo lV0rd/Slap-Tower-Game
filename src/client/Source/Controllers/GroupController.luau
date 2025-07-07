@@ -24,40 +24,45 @@ local Lobby = Map:WaitForChild("Lobby")
 local GroupWall = Lobby:WaitForChild(GROUP_WALL_NAME, 5)
 
 function toggle(p, bool)
-    if not p then
-        return
-    end
+	if not p then
+		return
+	end
 
-    p.Transparency = bool and 1 or 0.75
-    p.CanCollide = if bool then false else true
-    p:FindFirstChild("SurfaceGui").Enabled = if bool then false else true
+	p.Transparency = bool and 1 or 0.75
+	p.CanCollide = if bool then false else true
+	p:FindFirstChild("SurfaceGui").Enabled = if bool then false else true
 end
 
---pls bear with me, streamingenabled is pretty dog water so i have to do this
-workspace.Map.Lobby.ChildAdded:Connect(function(child)
-    if child.Name == GROUP_WALL_NAME then
-        GroupWall = child
-    end
-end)
-
 function Controller.Start()
-    local DataController = require(Controllers.DataController)
-    local Replica = DataController:GetPlayerDataAsync() :: ReplicaClient.Replica
-    local Data = Replica.Data :: ProfileTemplate.data
+	local DataController = require(Controllers.DataController)
+	local Replica = DataController:GetPlayerDataAsync() :: ReplicaClient.Replica
+	local Data = Replica.Data :: ProfileTemplate.data
 
-    --InGroup updates in real time btw
-    Replica:OnSet({"InGroup"}, function()
-        if Data.InGroup then
-            toggle(GroupWall, true)
-        else
-            warn(LocalPlayer, "left the group!!!! >:(")
-            toggle(GroupWall, false)
-        end
-    end)
+	--InGroup updates in real time btw
+	Replica:OnSet({ "InGroup" }, function()
+		if Data.InGroup then
+			toggle(GroupWall, true)
+		else
+			warn(LocalPlayer, "left the group!!!! >:(")
+			toggle(GroupWall, false)
+		end
+	end)
 
-    if Data.InGroup then
-        toggle(GroupWall, true)
-    end
+	if Data.InGroup then
+		toggle(GroupWall, true)
+	end
+
+	workspace.Map.Lobby.ChildAdded:Connect(function(child)
+		if child.Name == GROUP_WALL_NAME then
+			GroupWall = child
+
+			if Data.InGroup then
+				toggle(GroupWall, true)
+			else
+				toggle(GroupWall, false)
+			end
+		end
+	end)
 end
 
 return Controller
