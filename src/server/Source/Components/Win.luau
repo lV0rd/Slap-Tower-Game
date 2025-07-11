@@ -58,7 +58,7 @@ function module.new(instance: BasePart)
 		Janitor = Janitor.new(),
 		Debounce = {} :: { [Player]: boolean },
 
-		DebounceTime = 20,
+		DebounceTime = 7,
 	}, module)
 
 	self:init()

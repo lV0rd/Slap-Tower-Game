@@ -66,6 +66,7 @@ function Controller.Start()
 		local Price = GamepassRobloxInfo.PriceInRobux
 		v.Price.TextLabel.Text = "R$"..Price
 		v.Title.Text = v.Name
+		v.Icon.Image = "rbxassetid://"..GamepassRobloxInfo.IconImageAssetId
 
 		scope:Hydrate(v) {
 			[OnEvent "MouseButton1Click"] = function()
