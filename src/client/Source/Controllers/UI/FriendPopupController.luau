@@ -23,6 +23,11 @@ local Close = FriendPopup.Close
 local Invite = FriendPopup.Invite
 
 local Packages = ReplicatedStorage.Packages
+local Shared = ReplicatedStorage.Shared
+
+local Events = Shared.Events
+
+local FriendJoined = require(Events.FriendJoined):Client()
 
 local Fusion = require(Packages.Fusion)
 
@@ -32,7 +37,7 @@ local OnEvent = Fusion.OnEvent
 local Prompted = false
 
 local NO_FRIENDS_COOLDOWN = 5
-local POP_UP_COOLDOWN = 60
+local POP_UP_COOLDOWN = 120
 
 local Friend
 
@@ -58,6 +63,15 @@ function Controller.Start()
 			Friend = nil --js to be safe lol
 			task.delay(NO_FRIENDS_COOLDOWN, prompt)
 			return
+		end
+
+		for i, v in Players:GetPlayers() do
+			if v.UserId == Friend.VisitorId then
+				Prompted = false
+				Friend = nil --js to be safe lol
+				task.delay(NO_FRIENDS_COOLDOWN, prompt)
+				break
+			end
 		end
 
 		local Image =
@@ -106,6 +120,15 @@ function Controller.Start()
 			task.delay(POP_UP_COOLDOWN, prompt)
 		end,
 	})
+
+	FriendJoined:On(function(friendName)
+		game.StarterGui:SetCore("ChatMakeSystemMessage", {
+			Text = friendName .. " (your friend) just joined the game! Here's 1k!",
+			Color = Color3.fromRGB(0, 255, 0),
+			Font = Enum.Font.SourceSansBold,
+			FontSize = Enum.FontSize.Size24,
+		})
+	end)
 
 	prompt()
 end

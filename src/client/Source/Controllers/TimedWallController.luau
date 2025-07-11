@@ -18,10 +18,7 @@ local Format = require(Shared.Utils.Format)
 local TIME_TO_WAIT = 60 * 15
 
 function Controller.Start()
-	local JoinTime = LocalPlayer:GetAttribute("JoinTime") :: number
-	if not JoinTime then
-		JoinTime = workspace:GetServerTimeNow()
-	end
+	local JoinTime = LocalPlayer:GetAttribute("JoinTime") or workspace:GetServerTimeNow() :: number
 
 	Lobby.ChildAdded:Connect(function(child)
 		if child.Name == "Timed" then

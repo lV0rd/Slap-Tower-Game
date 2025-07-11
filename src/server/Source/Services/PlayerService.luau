@@ -48,7 +48,9 @@ else
 end
 
 local PlayerDataReplicaToken = ReplicaServer.Token("PlayerData")
---local LocalDataReplicaToken = ReplicaServer.Token("LocalData")
+local LocalDataReplicaToken = ReplicaServer.Token("LocalData")
+
+local FriendJoined = require(Shared.Events.FriendJoined):Server()
 
 --local SpinDebounce = {} --Debonce for the timed spin reward
 
@@ -122,7 +124,7 @@ function characterSpawn(Character)
 	if foundPrompt then
 		foundPrompt:Destroy()
 	end
-	
+
 	local ExplodePrompt = Instance.new("ProximityPrompt")
 	ExplodePrompt.ActionText = "🎇Explode?"
 	ExplodePrompt.Name = "ExplodePrompt"
@@ -202,26 +204,17 @@ function Service:PlayerJoin(Player: Player)
 			},
 			Data = Profile.Data,
 		}),
-		--[[
-        Private session player data
+
 		LocalData = ReplicaServer.New({
 			Token = LocalDataReplicaToken,
 			Tags = {
 				Player = Player,
 			},
+
 			Data = {
 				Gifts = {},
-				SpinHistory = {},
-
-				WinsMultiplier = 1,
-				CoinsMultiplier = 1,
-				KillsMultipler = 1,
-				HealthMultiplier = 1,
-				SpinDebounce = true,
 			},
-            
 		}),
-        ]]
 	}
 
 	Data.Replica:Replicate()
@@ -232,6 +225,24 @@ function Service:PlayerJoin(Player: Player)
 	local Replica = Data.Replica
 	local ReplicaData = Replica.Data
 	local Gamepasses = ReplicaData.Gamepasses
+
+	task.spawn(function()
+		local others = Players:GetPlayers()
+		for _, otherPlayer in ipairs(others) do
+			if otherPlayer ~= Player then
+				if otherPlayer:IsFriendsWith(Player.UserId) then
+					FriendJoined:Fire(otherPlayer, Player.Name)
+
+					local otherData = Service:GetPlayer(otherPlayer)
+					if not otherData then
+						continue
+					end
+
+					otherData.Replica:Set({"Coins"}, Replica.Data.Coins + 1000)
+				end
+			end
+		end
+	end)
 
 	for name, gamepass in Gamepass do
 		local Success, Owns = Future.Try(function()

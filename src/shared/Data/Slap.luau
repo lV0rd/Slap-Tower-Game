@@ -1,3 +1,4 @@
+local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local RunService = game:GetService("RunService")
 
@@ -32,7 +33,7 @@ return {
 		DebounceTime = 7,
 	},
 
-	["Dance Slap"] = {
+	["Dance Slap"] = { --
 		Force = 750,
 		Damage = 6,
 		DebounceTime = 10,
@@ -80,6 +81,17 @@ return {
 
 		Description = "A slap made of pure diamond, it sparkles and shines.",
 		Price = 1000,
+		Image = "rbxassetid://90828781936966"
+	},
+
+	["King Slap"] = {
+		Force = 8050,
+		Damage = 30,
+		DebounceTime = 7,
+
+		Description = "Only the worthy may feel this slap.",
+		Price = 1_000_000,
+		Image = "rbxassetid://90216971747443"
 	},
 
 	["Freeze Slap"] = {
@@ -115,7 +127,8 @@ return {
 		end,
 
 		Description = "Freezes players for 2 seconds, makes them chill.",
-		Price = 7500
+		Price = 7500,
+		Image = "rbxassetid://77791535327488"
 	},
 
 	["Lava Slap"] = {
@@ -154,6 +167,7 @@ return {
 
 		Description = "Burns players for 4 seconds, dealing 7 damage every 0.5 seconds.",
 		Price = 15000,
+		Image = "rbxassetid://112666010926897"
 	},
 
 	["Steel Slap"] = {
@@ -167,9 +181,70 @@ return {
 				HitHumanoid.WalkSpeed += 10
 			end)
 		end,
-		
+
 		Description = "Slows down players for 3 seconds, making them feel heavy.",
 		Price = 3000,
+		Image = "rbxassetid://121179631074748"
+	},
+
+	["Vampire Slap"] = {
+		Force = 850,
+		Damage = 15,
+		DebounceTime = 7,
+		Callback = function(Humanoid, HitHumanoid) --this will fire in its own thread.
+			local debounce = 0
+			local connection
+			local start = workspace:GetServerTimeNow()
+			local amount = 4
+
+			connection = RunService.PreSimulation:Connect(function()
+				local serverTime = workspace:GetServerTimeNow()
+				if serverTime - start > 3 then
+					connection:Disconnect()
+					connection = nil
+					return
+				end
+
+				if serverTime - debounce < 0.5 then
+					return
+				end
+
+				debounce = serverTime
+
+				local awarded = amount
+				local hitHealth = HitHumanoid.Health
+
+				if hitHealth < amount then
+					awarded = hitHealth
+				end
+
+				HitHumanoid.Health -= awarded
+				Humanoid.Health += awarded
+			end)
+		end,
+
+		Description = "Dracula called, he wants his slap back.",
+		Price = 6000,
+		Image = "rbxassetid://89214727041667"
+	},
+
+	["Kick Slap"] = {
+		Force = 10050,
+		Damage = 50,
+		DebounceTime = 10,
+		Callback = function(Humanoid, HitHumanoid) --this will fire in its own thread.
+			local HitCharacter = HitHumanoid.Parent
+			local HitPlayer = Players:GetPlayerFromCharacter(HitCharacter)
+			if not HitPlayer then
+				return
+			end
+
+			HitPlayer:Kick(string.format("You have been kick slap'd by %s", Humanoid.Parent.Name))
+		end,
+
+		Description = "Kick them out of the game!",
+		Price = 100_000_000,
+		Image = "rbxassetid://112736010049777"
 	},
 
 	--Premium

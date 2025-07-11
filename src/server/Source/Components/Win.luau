@@ -1,3 +1,4 @@
+local BadgeService = game:GetService("BadgeService")
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local ServerStorage = game:GetService("ServerStorage")
@@ -21,6 +22,10 @@ local Components = {}
 local PlayerService = require(Services.PlayerService)
 
 local Tools = ReplicatedStorage.Assets.Tools
+
+local spawns = workspace.Map.Lobby.Spawns:GetChildren()
+
+local Constants = require(ReplicatedStorage.Shared.Data.Constants)
 
 --incase u want something to happen whenever a player beats a certain tower or smth idk lol
 --put _ instead of spaces in the name, cuz roblox dumb and doesnt allow spaces in attribute names
@@ -94,6 +99,10 @@ function module:init()
 			return
 		end
 
+		if not BadgeService:UserHasBadgeAsync(Player.UserId, Constants.WIN_BADGE) then
+			BadgeService:AwardBadge(Player.UserId, Constants.WIN_BADGE)
+		end
+
 		local Replica = PlayerData.Replica
 		Replica:Set({ "Wins" }, Replica.Data.Wins + 1)
 		Replica:Set({ "Coins" }, Replica.Data.Coins + CoinsAmount)
@@ -101,7 +110,9 @@ function module:init()
 
 		functions[winPartName](Player, PlayerData)
 
-		Character:PivotTo(workspace.Map.Lobby.SpawnLocation.CFrame)
+		local RandomSpawn = spawns[math.random(#spawns)]
+
+		Character:PivotTo(RandomSpawn.CFrame)
 		WinEvent:Fire(Player)
 	end))
 end

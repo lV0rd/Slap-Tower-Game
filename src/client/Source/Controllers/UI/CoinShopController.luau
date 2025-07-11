@@ -221,6 +221,7 @@ function Controller.Start()
 		v.ItemName.Text = v.Name
 		v.Price.Text = tostring(ItemData.Price or 0) .. "$"
 		v.LayoutOrder = ItemData.Price or 0
+		v.Image.Image = ItemData.Image or "rbxassetid://103366768458485"
 
 		scope:Hydrate(v)({
 			[OnEvent("MouseButton1Click")] = function()

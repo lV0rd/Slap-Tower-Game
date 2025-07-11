@@ -1,3 +1,4 @@
+local BadgeService = game:GetService("BadgeService")
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
@@ -9,6 +10,8 @@ local module = { Tag = script.Name }
 module.__index = module
 
 local Components = {}
+
+local Constants = require(ReplicatedStorage.Shared.Data.Constants)
 
 function module.new(instance: Model)
 	local DebounceTime = instance:GetAttribute("DebounceTime") or 0 :: number
@@ -69,6 +72,11 @@ function module:init()
 		end
 
 		self.Debounce = true
+
+		--Badge
+		if not BadgeService:UserHasBadgeAsync(Player.UserId, Constants.TROLL_BADGE) then
+			BadgeService:AwardBadge(Player.UserId, Constants.TROLL_BADGE)
+		end
 
 		Button.Color = Color3.fromRGB(105, 16, 16)
 		Button.Position -= Vector3.yAxis * .25

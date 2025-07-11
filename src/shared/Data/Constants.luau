@@ -4,4 +4,7 @@ return {
 
     --IDs
     GROUP_ID = 1226113,
+
+    TROLL_BADGE = 2113501367652744,
+    WIN_BADGE = 32507028360006,
 }
