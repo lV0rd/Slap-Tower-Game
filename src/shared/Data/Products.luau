@@ -31,6 +31,18 @@ return {
 		end,
 	},
 
+	["SkipTower"] = {
+		ID= 3333535950,
+		Callback = function(Player, PlayerData)
+			local Character = Player.Character
+			if not Character then
+				return
+			end
+
+			Character:PivotTo(workspace.Map.End.CFrame)
+		end
+	},
+
 	["Explode"] = {
 		ID = 3322885540,
 		Callback = function(Player, PlayerData)

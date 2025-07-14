@@ -51,7 +51,7 @@ function module:init()
 
 	local Coins = self.Instance:GetAttribute("Coins")
 
-	self.Janitor:Add(ProximityPrompt.Triggered:Connect(function(Player: Player)
+	self.Janitor:Add(ProximityPrompt.Triggered:Connect(function(Player)
 		local Character = Player.Character
 		if not Character then
 			return
@@ -68,7 +68,7 @@ function module:init()
 		end)
 
 		Character:PivotTo(Destination.CFrame * CFrame.new(0, 1.5, 0))
-		
+
 		if Coins then
 			local PlayerData = PlayerService:GetPlayer(Player)
 			if not PlayerData then
@@ -78,7 +78,8 @@ function module:init()
 			local Replica = PlayerData.Replica
 			local Data = Replica.Data
 
-			Replica:Set({"Coins"}, Data.Coins + Coins)
+			Replica:Set({ "Coins" }, Data.Coins + Coins)
+			Player.leaderstats.Coins.Value = Replica.Data.Coins
 		end
 	end))
 end

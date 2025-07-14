@@ -58,7 +58,7 @@ function module.new(instance: BasePart)
 		Janitor = Janitor.new(),
 		Debounce = {} :: { [Player]: boolean },
 
-		DebounceTime = 7,
+		DebounceTime = 15,
 	}, module)
 
 	self:init()
@@ -106,6 +106,8 @@ function module:init()
 		local Replica = PlayerData.Replica
 		Replica:Set({ "Wins" }, Replica.Data.Wins + 1)
 		Replica:Set({ "Coins" }, Replica.Data.Coins + CoinsAmount)
+
+		Player.leaderstats.Coins.Value = Replica.Data.Coins
 		Player.leaderstats.Wins.Value = Replica.Data.Wins
 
 		functions[winPartName](Player, PlayerData)

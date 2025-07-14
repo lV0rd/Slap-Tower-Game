@@ -30,7 +30,7 @@ NewBeam.Attachment1 = workspace.Terrain.PointTarget
 NewBeam.Parent = Char
 
 local function isOnTop(pos1, pos2)
-    local horizontalThreshold = 100
+    local horizontalThreshold = 10000
     local minHeightDifference = 1
     
     local horizontalDistance = (Vector3.new(pos1.X, 0, pos1.Z) - Vector3.new(pos2.X, 0, pos2.Z)).Magnitude

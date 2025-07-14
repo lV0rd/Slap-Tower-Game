@@ -74,12 +74,14 @@ function module:init()
 		self.Debounce = true
 
 		--Badge
-		if not BadgeService:UserHasBadgeAsync(Player.UserId, Constants.TROLL_BADGE) then
-			BadgeService:AwardBadge(Player.UserId, Constants.TROLL_BADGE)
-		end
+		task.spawn(function()
+			if not BadgeService:UserHasBadgeAsync(Player.UserId, Constants.TROLL_BADGE) then
+				BadgeService:AwardBadge(Player.UserId, Constants.TROLL_BADGE)
+			end
+		end)
 
 		Button.Color = Color3.fromRGB(105, 16, 16)
-		Button.Position -= Vector3.yAxis * .25
+		Button.Position -= Vector3.yAxis * 0.25
 
 		for i, v in AffectedParts:GetChildren() do
 			if v:IsA("BasePart") then
@@ -98,7 +100,9 @@ function module:init()
 		end
 
 		Button.Color = OldColor
-		Button.Position += Vector3.yAxis * .25
+		Button.Position += Vector3.yAxis * 0.25
+
+		task.wait(.25)
 
 		self.Debounce = false
 	end))

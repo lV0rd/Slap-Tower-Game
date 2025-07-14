@@ -218,7 +218,7 @@ function Service:PlayerJoin(Player: Player)
 	}
 
 	Data.Replica:Replicate()
-	--Data.LocalData:Replicate()
+	Data.LocalData:Replicate()
 
 	self.Players[Player] = Data
 
@@ -238,7 +238,8 @@ function Service:PlayerJoin(Player: Player)
 						continue
 					end
 
-					otherData.Replica:Set({"Coins"}, Replica.Data.Coins + 1000)
+					otherData.Replica:Set({ "Coins" }, Replica.Data.Coins + 1000)
+					otherPlayer.leaderstats.Coins.Value = Replica.Data.Coins
 				end
 			end
 		end
@@ -274,12 +275,18 @@ function Service:PlayerJoin(Player: Player)
 
 	local leaderstats = Instance.new("Folder")
 	leaderstats.Name = "leaderstats"
-	leaderstats.Parent = Player
 
 	local Wins = Instance.new("IntValue")
 	Wins.Name = "Wins"
 	Wins.Value = Profile.Data.Wins or 0
 	Wins.Parent = leaderstats
+
+	local Coins = Instance.new("IntValue")
+	Coins.Name = "Coins"
+	Coins.Value = Profile.Data.Coins or 0
+	Coins.Parent = leaderstats
+
+	leaderstats.Parent = Player
 
 	if Data.Replica.Data.FirstLogin == 0 then
 		Data.Replica:Set({ "FirstLogin" }, workspace:GetServerTimeNow())

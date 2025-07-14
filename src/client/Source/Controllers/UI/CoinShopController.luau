@@ -202,6 +202,18 @@ function Controller.Start()
 
 				if Result then
 					print("Successfully bought item: ", peek(SelectedItem), debug.traceback())
+
+					local S, R = EquipFunction:Call(peek(SelectedItem)):Await()
+					print("hi?")
+					if not S then
+						warn("Failed to equip item: ", R)
+						return
+					else
+						print("hi????")
+						print(R)
+					end
+
+					updatePreview()
 				end
 			end
 		end,
@@ -231,7 +243,9 @@ function Controller.Start()
 					SelectedItem:set(v.Name)
 				end
 
-				for i, v in SlapsOwned do print(i, v) end
+				for i, v in SlapsOwned do
+					print(i, v)
+				end
 			end,
 		})
 	end

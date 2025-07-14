@@ -17,7 +17,7 @@ function module.new(instance: BasePart)
 		Debounce = {} :: {[Player] : boolean},
 
         DebounceTime = instance:GetAttribute("DebounceTime") or 0.5,
-        Damage = instance:GetAttribute("Damage") or 3,
+        Damage = 10,
 	}, module)
 
 	self:init()

@@ -66,11 +66,20 @@ return {
 		DebounceTime = 6,
 	},
 
-	--Gamepasss
+	--Gamepass
 	["Rainbow Slap"] = {
-		Force = 11650,
+		Force = 10000,
 		Damage = 60,
 		DebounceTime = 6,
+		Reach = 1.5,
+	},
+	
+	--Gamepass
+	["Giant Slap"] = {
+		Force = 12000,
+		Damage = 20,
+		DebounceTime = 18,
+		Reach = 2.7,
 	},
 
 	--Paid
@@ -85,12 +94,12 @@ return {
 	},
 
 	["King Slap"] = {
-		Force = 8050,
-		Damage = 30,
+		Force = 3050,
+		Damage = 45,
 		DebounceTime = 7,
 
 		Description = "Only the worthy may feel this slap.",
-		Price = 1_000_000,
+		Price = 100_000,
 		Image = "rbxassetid://90216971747443"
 	},
 
@@ -224,8 +233,35 @@ return {
 		end,
 
 		Description = "Dracula called, he wants his slap back.",
-		Price = 6000,
+		Price = 11000,
 		Image = "rbxassetid://89214727041667"
+	},
+
+	["Dual Slap"] = {
+		Force = 1010,
+		Damage = 5,
+		DebounceTime = 7.5,
+		Price = 8500,
+		Description = "Double the fun!",
+		Image = "rbxassetid://107014708985173"
+	},
+
+	["TNT Slap"] = {
+		Force = 1000,
+		Damage = 25,
+		DebounceTime = 10,
+		Callback = function(Humanoid, HitHumanoid) --this will fire in its own thread.
+			local HitCharacter = HitHumanoid.Parent :: Model
+			local Explosion = Instance.new("Explosion")
+			Explosion.BlastPressure = 0
+			Explosion.DestroyJointRadiusPercent = 0
+			Explosion.Position = HitCharacter:GetPivot().Position
+			Explosion.Parent = workspace
+		end,
+
+		Description = "TNT TNT TNT TNT!!!",
+		Price = 15000,
+		Image = "rbxassetid://74037158961694"
 	},
 
 	["Kick Slap"] = {
@@ -243,7 +279,7 @@ return {
 		end,
 
 		Description = "Kick them out of the game!",
-		Price = 100_000_000,
+		Price = 10_000_000,
 		Image = "rbxassetid://112736010049777"
 	},
 

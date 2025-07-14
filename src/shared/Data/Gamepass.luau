@@ -40,6 +40,25 @@ return {
 		end,
 	},
 
+	["Giant Slap"] = {
+		ID = 1315553468,
+		OnJoin = false,
+		OnSpawn = true,
+		Callback = function(Player: Player, PlayerData: any)
+			local Tool = Tools:FindFirstChild("Giant Slap") :: Tool?
+			if not Tool then
+				return
+			end
+
+            if Player.Backpack:FindFirstChild(Tool.Name) then
+                return
+            end
+
+			local NewTool = Tool:Clone()
+			NewTool.Parent = Player.Backpack
+		end,
+	},
+
     ["Magic Carpet"] = {
 		ID = 1284700673,
 		OnJoin = false,

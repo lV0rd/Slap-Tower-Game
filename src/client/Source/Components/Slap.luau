@@ -78,7 +78,11 @@ function module:init()
 		end
 
 		local Animator = Humanoid:FindFirstChildOfClass("Animator")
-		local Animation = Animator and Animator:LoadAnimation(ReplicatedStorage.Assets.Animations.Swing)
+		local IsDual = self.Instance.Name == "Dual Slap"
+		local Animation = Animator
+			and Animator:LoadAnimation(
+				IsDual and ReplicatedStorage.Assets.Animations.DualSwing or ReplicatedStorage.Assets.Animations.Swing
+			)
 		if Animation then
 			Animation:Play()
 		end
@@ -89,7 +93,7 @@ function module:init()
 
 		local RootPart = Humanoid.RootPart
 		Hitbox = Instance.new("Part")
-		Hitbox.Size = Vector3.new(8, 5, 6)
+		Hitbox.Size = Vector3.new(8, 5, 6 * (self.Data.Reach or 1))
 		Hitbox.Transparency = 1
 		Hitbox.CanCollide = false
 		Hitbox.Anchored = false
@@ -136,15 +140,15 @@ function module:init()
 						end
 					else
 						if connection then
-								connection:Disconnect()
-								connection = nil
-							end
+							connection:Disconnect()
+							connection = nil
+						end
 
-							if Hitbox then
-								Hitbox:Destroy()
-							end
+						if Hitbox then
+							Hitbox:Destroy()
+						end
 
-							SlapEvent:Fire(hum)
+						SlapEvent:Fire(hum)
 						break
 					end
 				end

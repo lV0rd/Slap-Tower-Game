@@ -5,8 +5,9 @@ return {
 			Time = 60 * 2,
 			Title = "+300 Coins",
 
-			Reward = function(Player: Player, PlayerData)
+			Reward = function(Player, PlayerData)
 				PlayerData.Replica:Set({ "Coins" }, PlayerData.Replica.Data.Coins + 300)
+				Player.leaderstats.Coins.Value = PlayerData.Replica.Data.Coins
 			end,
 
 			Image = "rbxassetid://17613785372",
@@ -16,8 +17,9 @@ return {
 			Time = 60 * 7,
 			Title = "+700 Coins",
 
-			Reward = function(Player: Player, PlayerData)
+			Reward = function(Player, PlayerData)
 				PlayerData.Replica:Set({ "Coins" }, PlayerData.Replica.Data.Coins + 700)
+				Player.leaderstats.Coins.Value = PlayerData.Replica.Data.Coins
 			end,
 
 			Image = "rbxassetid://17613785372",
@@ -27,8 +29,9 @@ return {
 			Time = 60 * 10,
 			Title = "+1000 Coins",
 
-			Reward = function(Player: Player, PlayerData)
+			Reward = function(Player, PlayerData)
 				PlayerData.Replica:Set({ "Coins" }, PlayerData.Replica.Data.Coins + 1000)
+				Player.leaderstats.Coins.Value = PlayerData.Replica.Data.Coins
 			end,
 
 			Image = "rbxassetid://17613785372",
@@ -49,8 +52,9 @@ return {
 			Time = 60 * 20,
 			Title = "+3000 Coins",
 
-			Reward = function(Player: Player, PlayerData)
+			Reward = function(Player, PlayerData)
 				PlayerData.Replica:Set({ "Coins" }, PlayerData.Replica.Data.Coins + 3000)
+				Player.leaderstats.Coins.Value = PlayerData.Replica.Data.Coins
 			end,
 
 			Image = "rbxassetid://17613785372",

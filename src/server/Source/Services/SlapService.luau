@@ -90,7 +90,7 @@ function Service.Start()
 		end
 
 		local Distance = (Humanoid.RootPart.Position - HitHumanoid.RootPart.Position)
-		if Distance.Magnitude > 9 then
+		if Distance.Magnitude > 10 * (ToolData.Reach or 1) then
 			return
 		end
 
@@ -123,7 +123,7 @@ function Service.Start()
 		HitHumanoid.Sit = false
 	end)
 
-	BuyFunction:SetCallback(function(Player: Player, SelectedItem: string)
+	BuyFunction:SetCallback(function(Player, SelectedItem: string)
 		local SelectedData = SlapData[SelectedItem]
 		if not SelectedData then
 			warn("No slap data found for", SelectedItem)
@@ -138,17 +138,6 @@ function Service.Start()
 
 		local Replica = PlayerData.Replica
 
-		if Debounces[Player] then
-			warn("Player is already debounced", Player.Name)
-			return
-		end
-
-		Debounces[Player] = true
-
-		task.delay(0.5, function()
-			Debounces[Player] = nil
-		end)
-
 		if Replica.Data.Coins < (SelectedData.Price or 0) then
 			print("Not enough coins to buy item:", SelectedItem, "Player Coins:", Replica.Data.Coins)
 			return
@@ -160,6 +149,7 @@ function Service.Start()
 		end
 
 		Replica:Set({ "Coins" }, Replica.Data.Coins - (SelectedData.Price or 0))
+		Player.leaderstats.Coins.Value = Replica.Data.Coins
 		Replica:Set({ "SlapsOwned", SelectedItem }, true)
 		print("Finalized purchase for", Player.Name, "Item:", SelectedItem)
 		return true
@@ -191,6 +181,7 @@ function Service.Start()
 		end)
 
 		if not Replica.Data.SlapsOwned[SelectedItem] then
+			warn("Slap not owned")
 			return
 		end
 

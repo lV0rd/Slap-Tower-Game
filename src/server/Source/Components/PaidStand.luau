@@ -88,6 +88,7 @@ function module:init()
 		end
 
 		Replica:Set({ "Coins" }, Data.Coins - Price)
+		Player.leaderstats.Coins.Value = Replica.Data.Coins
 
 		local NewTool = Tools:FindFirstChild(self.Instance.Name):Clone()
 		NewTool.Parent = Player.Backpack
