@@ -28,6 +28,7 @@ local Blacklisted = {
 
 local Janitor = require(Packages.Janitor)
 local Future = require(Packages.Future)
+local Format = require(ReplicatedStorage.Shared.Utils.Format)
 
 local module = { Tag = script.Name }
 module.__index = module
@@ -169,7 +170,7 @@ function module:init()
 			Item.Rank.Text = "#" .. tostring(i)
 			Item.Username.Text = Username
 			Item.Image.Image = Image
-			Item.Amount.Text = tostring(Value)
+			Item.Amount.Text = tostring(if StoreItem == "Playtime" then Format.time(Value) else Value)
 
 			Item.Parent = ListFrame
 		end
